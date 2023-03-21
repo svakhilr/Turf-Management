@@ -4,8 +4,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from .serializers import UserSignupSerialiser,UserloginSerialiser
 from django.contrib.auth import  authenticate
-from turfs.serialiszers import TurfSerialiser
-from turfs.models import Turf
+from turfs.serialiszers import TurfSerialiser,BookingslotSerialiser
+from turfs.models import Turf,Booking
 from geopy.distance import distance
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
@@ -97,6 +97,16 @@ class NearbyTurfs(APIView):
         serialized_places = TurfSerialiser(nearby_turfs, many=True).data
         return Response(serialized_places,status=status.HTTP_200_OK)
     
+
+class ViewBookings(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self,request):
+        user = request.user
+        bookings = Booking.objects.filter(user=user)
+        serialiser = BookingslotSerialiser(bookings, many=True)
+        return Response(serialiser.data, status=status.HTTP_200_OK)
+
 
 
 

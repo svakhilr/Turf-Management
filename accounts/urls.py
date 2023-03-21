@@ -8,5 +8,6 @@ urlpatterns=[
   path('viewturfs/',views.Turfview.as_view()),
   path('nearbyturfs/',views.NearbyTurfs.as_view()),
   path('logout/', views.LogoutView.as_view(), name='auth_logout'),
+  path('bookings/',views.ViewBookings.as_view())
 
 ]

@@ -47,3 +47,5 @@ class VendorDetails(APIView):
             return Response({"message":"succesfully approved"},status=status.HTTP_202_ACCEPTED)
         except:
             return Response({"message":"Not found"},status=status.HTTP_400_BAD_REQUEST)
+
+

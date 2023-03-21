@@ -20,10 +20,11 @@ class PayPalpayment(APIView):
             "client_secret": "ENzwTIy6whsGnsm7ZlDz1Ay3XBHwf3el4cn5YSFXCDBSNM3NjUK8Vv1W8N-UnZNgPKuMkef2Au3vzRMy" })
         
         try:
-            turf_id= request.data['turf_id']
-            turf = Turf.objects.get(id=turf_id)
+            booking_id= request.data['booking_id']
+            booking = Booking.objects.get(booking_number=booking_id)
+            amount=booking.timeslot.price_per_hour
         except:
-            return Response({"message":"Turf not found"},status=status.HTTP_400_BAD_REQUEST)          
+            return Response({"message":"Booking ID not found"},status=status.HTTP_400_BAD_REQUEST)          
 
         payment = paypalrestsdk.Payment({
     "intent": "sale",
@@ -35,13 +36,13 @@ class PayPalpayment(APIView):
     "transactions": [{
         "item_list": {
             "items": [{
-                "name": "turf.name",
+                "name": "booking.timeslot.price_per_hour",
                 "sku": "item",
-                "price": "5.00",
+                "price": amount,
                 "currency": "USD",
                 "quantity": 1}]},
         "amount": {
-            "total": "5.00",
+            "total": amount,
             "currency": "USD"},
         "description": "This is the payment transaction description."}]})
         
@@ -88,6 +89,7 @@ class Checkout(APIView):
 
 class PaymentResponse(APIView):
     def get(self,request):
+        
         payment_id = request.GET.get('paymentId')
         print(payment_id)
         return Response({"message":"Payment initiated","payment_id":payment_id},status=status.HTTP_200_OK)

@@ -1,4 +1,4 @@
-from .models import Turf,TurfImage,Timeslots,Booked_Timeslots
+from .models import Turf,TurfImage,Timeslots,Booked_Timeslots,Booking
 from rest_framework import serializers
 from geopy.geocoders import Nominatim
 from accounts.models import VendorProfile
@@ -78,3 +78,9 @@ class BookedSerialiser(serializers.ModelSerializer):
         model = Booked_Timeslots
         fields=['timeslot','booking_date','user','turf']
 
+
+class BookingslotSerialiser(serializers.ModelSerializer):
+
+    class Meta:
+        model =Booking
+        fields='__all__'

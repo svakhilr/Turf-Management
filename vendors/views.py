@@ -7,8 +7,8 @@ from rest_framework.permissions import IsAuthenticated
 from accounts.models import Accounts,VendorProfile
 from .serializers import VendorProfileSerialiser
 from .permissions import Isvendor
-from turfs.models  import Booked_Timeslots
-from turfs.serialiszers import BookedSerialiser
+from turfs.models  import Booked_Timeslots,Turf
+from turfs.serialiszers import BookedSerialiser, TurfSerialiser
 
 
 
@@ -46,6 +46,16 @@ class Booked_Slots(APIView):
         bookings = Booked_Timeslots.objects.filter(turf__vendor=vendor)
         serialiser= BookedSerialiser(bookings, many=True)
         return Response(serialiser.data,status=status.HTTP_200_OK)
+    
+class VendorTurfs(APIView):
+    permission_classes=[IsAuthenticated, Isvendor]
+
+    def get(self,request):
+        user = request.user
+        turf = Turf.objects.filter(user=user)
+        serialiser = TurfSerialiser(turf, many=True)
+        return Response(serialiser.data,status=status.HTTP_200_OK)
+
         
     
 
